@@ -1,11 +1,29 @@
+#name: tfsec
+#permissions: write-all
+#on:
+#  pull_request:
+#  workflow_dispatch:
+#jobs:
+#  tfsec:
+#    uses: clouddrove/github-shared-workflows/.github/workflows/tfsec.yml@1.0.5
+#    secrets: inherit
+#    with:
+#      working_directory: '.'
 name: tfsec
-permissions: write-all
 on:
+  push:
+    branches:
+      - main
   pull_request:
-  workflow_dispatch:
 jobs:
   tfsec:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tfsec.yml@1.0.5
-    secrets: inherit
-    with:
-      working_directory: '.'
+    name: tfsec
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@master
+      - name: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          soft_fail: true
